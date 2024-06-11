@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -35,12 +35,6 @@ jobs:
           npm run test --if-present
           popd
 
-      - name: Zip artifact for deployment
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/${{ env.PACKAGE_PATH }}'
-          zip -r release.zip .
-          popd
-          cp ./${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/${{ env.PACKAGE_PATH }}/release.zip ./release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -54,9 +48,6 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -67,12 +58,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D810AAE223B944DAB5BE10C3C7BD2517 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B50AC9A10C2043CF8659AB1430C99691 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A1EE22F1D9DD426783AF476510834AC2 }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -80,5 +65,5 @@ jobs:
         with:
           app-name: 'amgaz204-api'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: ${{ secrets.Azure_Webapp_Publish_Profile }}
           
