@@ -72,5 +72,5 @@ jobs:
         with:
           app-name: 'amgaz204-api'
           slot-name: 'Production'
-          package: ${{ secrets.Azure_Webapp_Publish_Profile }}
+          package: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
           
