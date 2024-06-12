@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
 
 env:
+  AZURE_FUNCTIONAPP_NAME: 'amgaz204-api' 
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '20.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
   PACKAGE_PATH: 'start/server'
@@ -48,8 +49,6 @@ jobs:
           name: node-app
           path: release.zip
 
-
-
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -65,12 +64,11 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'amgaz204-api'
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
           
