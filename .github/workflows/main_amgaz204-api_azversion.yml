@@ -56,6 +56,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
+      contents: read
 
     steps:
       - name: Download artifact from build job
@@ -67,12 +68,12 @@ jobs:
         run: unzip release.zip
       
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2B9E969045584C1181CD5626323143A7 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D11BD4F265BE49CC8A3EEF55CDAB2DC5 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2B2B4699E393424BBDD89EC2BA5FC9FE }}
-
+          
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
