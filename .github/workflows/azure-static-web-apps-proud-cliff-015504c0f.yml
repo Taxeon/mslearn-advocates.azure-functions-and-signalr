@@ -29,6 +29,15 @@ jobs:
         run: |
           npm install node@20.12.2
 
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_BACKEND_URL: https://amgaz204-api.azurewebsites.net
+          directory: './start/client'
+          file_name: .env
+          fail_on_empty: false
+          sort_keys: false
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
