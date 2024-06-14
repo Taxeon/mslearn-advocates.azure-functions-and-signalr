@@ -43,7 +43,7 @@ jobs:
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env: 
-          BACKEND_URL: ${{ vars.BACKEND_URL }}
+          BACKEND_URL: https://proud-cliff-015504c0f.5.azurestaticapps.net
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
